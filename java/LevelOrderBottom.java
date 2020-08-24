@@ -27,6 +27,7 @@
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 /**
  * Definition for a binary tree node.
@@ -39,21 +40,41 @@ import java.util.List;
  */
 class LevelOrderBottom {
     public List<List<Integer>> levelOrderBottom(TreeNode root) {
-        List list = new ArrayList();
-        this.add(root,list);
-        return list;
-    }
-    public void add(TreeNode root, List list) {
-        if(root != null) {
-            List list2 = new ArrayList();
-            list2.add(root.left);
-            list2.add(root.right);
-            list.add(list2);
-            this.add(root.left,list);
-            this.add(root.right,list);
-        }else {
-            list.add(root);
+        if(root == null) return new ArrayList<>();
+        List<List<Integer>> list = new ArrayList<>();
+        Stack<List<Integer>> stack = new Stack<>();
+        dept(stack,root);
+        while(!stack.isEmpty()) {
+            list.add(stack.pop());
         }
+        ArrayList<Integer> arrayList = new ArrayList<Integer>();
+        arrayList.add(root.val);
+        list.add(arrayList);
+        return list;
+
+    }
+
+    public void dept(Stack stack,TreeNode root) {
+        if (root == null) return;
+
+        if (root.left != null || root.right != null) {
+            List<Integer> list2 = new ArrayList();
+            if (root.left != null) {
+                list2.add(root.left.val);
+            }
+            if (root.right != null) {
+                list2.add((root.right.val));
+            }
+            stack.add(list2);
+            dept(stack, root.left);
+            dept(stack, root.right);
+
+        }
+
+    }
+    public static void main(String[] args) {
+        TreeNode treeNode = TreeNode.mkTree("[3,9,20,null,null,15,7]");
+        System.out.println(new LevelOrderBottom().levelOrderBottom(treeNode));
     }
 }
 //leetcode submit region end(Prohibit modification and deletion)
